@@ -4,7 +4,18 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabLayout() {
     return (
-        <Tabs>
+        <Tabs
+            screenOptions={{
+                tabBarStyle: { height: 62 },
+                tabBarLabelStyle: {
+                    fontSize: 15,
+                    fontWeight: 300,
+                },
+                tabBarActiveBackgroundColor: '#EBEFE7',
+                tabBarActiveTintColor: '#424940',
+                animation: 'fade'
+            }}
+        >
             <Tabs.Screen name="notes" options={{
                 title: 'Notes',
                 headerShown: false,
@@ -25,7 +36,7 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     tabBarItemStyle: { display: "none" },
-                    
+
                 }}
             />
         </Tabs>

@@ -1,33 +1,42 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { useLocalSearchParams } from "expo-router";
+import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { useState } from 'react';
 
-export default function DetailsScreen() {
+export default function NotesScreen() {
+    const [title, onChangeTitle] = useState("Placeholder Title");
+    const [text, onChangeText] = useState("Placeholder Text");
 
-    const { data } = useLocalSearchParams();
-
-    if (data === 'true') {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>I SAID NOT TO CLICK IT</Text>
-            </View>
-        );
-    } else {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>This is where details of the app belong.{"\n"}Many details that I am putting right here.</Text>
-            </View>
-        )
-    }
+    return (
+        <View style={styles.container}>
+            <TextInput
+                style={[styles.title, styles.text]}
+                onChangeText={onChangeTitle}
+                value={title}
+            />
+            <Text style={[styles.text, styles.date]}>03, March, 2025</Text>
+            <TextInput
+                style={styles.text}
+                onChangeText={onChangeText}
+                value={text}
+            />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#25292e',
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 10,
     },
     text: {
-        color: '#fff',
+        color: '#424940',
     },
+    title: {
+        fontWeight: 700,
+        fontSize: 28,
+        borderBottomWidth: 2,
+        borderBottomColor: '#42494050',
+    },
+    date: {
+        fontSize: 20,
+    }
 });
