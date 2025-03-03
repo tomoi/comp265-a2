@@ -1,12 +1,14 @@
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { useState } from 'react';
+
 
 export default function NotesScreen() {
     const [title, onChangeTitle] = useState("Placeholder Title");
     const [text, onChangeText] = useState("Placeholder Text");
 
+
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <TextInput
                 style={[styles.title, styles.text]}
                 onChangeText={onChangeTitle}
@@ -18,7 +20,7 @@ export default function NotesScreen() {
                 onChangeText={onChangeText}
                 value={text}
             />
-        </View>
+        </ScrollView>
     )
 }
 
@@ -35,8 +37,12 @@ const styles = StyleSheet.create({
         fontSize: 28,
         borderBottomWidth: 2,
         borderBottomColor: '#42494050',
+        marginBottom: 10,
+        paddingBottom: 10,
     },
     date: {
-        fontSize: 20,
+        fontSize: 18,
+        color: '#42494075',
+        paddingLeft: 20,
     }
 });

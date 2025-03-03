@@ -1,32 +1,41 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, } from 'react-native';
 import { Link } from 'expo-router';
 
+
+const noteObject = {
+    1234: { name: "Note 1", content: "This is my first note, and it might not work." },
+    14284: { name: "Note 2", content: "This is my second note, I dont know if it will work." }
+}
+
 export default function NotesScreen() {
+
+    let noteList = [];
+
+    for (let i in noteObject) {
+        noteList = [...noteList, <Link key={i} href="notes/note">{noteObject[i].name}</Link>]
+    }
+
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Text style={styles.text}>Notes Home Screen</Text>
-            <Link href="notes/note?data=false" style={styles.button}>
+            <Link href="notes/note" style={styles.button}>
                 Go to Details screen
             </Link>
-            <Link href="notes/note?data=true" style={styles.button}>
-                DON'T CLICK THIS BUTTON
-            </Link>
-        </View>
+            <View>{noteList}</View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#25292e',
-        justifyContent: 'center',
-        alignItems: 'center',
+        margin: 15,
     },
     text: {
-        color: '#fff',
+        color: '#424940',
     },
     button: {
-        color: '#fff',
+        color: '#424940',
         fontSize: 20,
         textDecorationLine: 'underline',
     }
