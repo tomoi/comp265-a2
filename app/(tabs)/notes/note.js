@@ -1,7 +1,7 @@
-import { Text, View, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, TextInput, ScrollView, Button } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const noteObject = {
@@ -19,7 +19,7 @@ const noteObject = {
     1454284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
     14234284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
     14463284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1434284: { name: "Note 981", content: "Will this one work?"},
+    1434284: { name: "Note 981", content: "Will this one work?" },
     14223484: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
     1465284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
     14243284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
@@ -28,38 +28,66 @@ const noteObject = {
 
 export default function NotesScreen() {
     const { noteId } = useLocalSearchParams();
+    const [noteContent, getNoteContent] = useState("");
+    const [title, onChangeTitle] = useState(noteContent.name);
+    const [text, onChangeText] = useState(noteContent.content);
+    console.log(noteId);
 
+    //function to save note
+    async function saveNote() {
+        try {
+            const jsonValue = JSON.stringify({ name: title, content: text });
+            await AsyncStorage.setItem(noteId, jsonValue);
+        } catch(e) {
+            console.log(e)
+        }
+        console.log("Done")
+    }
+
+    //when the page loads, get page content
     useEffect(() => {
-        async function getNote(noteID) {
-            let keys = []
+        async function getNote() {
             try {
-                keys = await AsyncStorage.getItem(noteID)
+                let note = await AsyncStorage.getItem(noteId);
+                // console.log(note);
+                getNoteContent(JSON.parse(note));
             } catch (e) {
                 console.log(e)
             }
-            // example console.log result:
-            // ['@MyApp_user', '@MyApp_key']
         }
-        getNote(noteId);
+        getNote();
+        console.log(noteContent);
+        // console.log(noteContent);
     }, []);
 
-    const [title, onChangeTitle] = useState("Note Title");
-    const [text, onChangeText] = useState("Write Here");
+    //when the note loads from storage, fill it to the screen.
+    useEffect(() => {
+        onChangeTitle(noteContent.name);
+        onChangeText(noteContent.content);
+    }, [noteContent]);
 
     return (
-        <ScrollView style={styles.container}>
-            <TextInput
-                style={[styles.title, styles.text]}
-                onChangeText={onChangeTitle}
-                value={title}
+        <View style={styles.container}>
+            <ScrollView>
+                <TextInput
+                    style={[styles.title, styles.text]}
+                    onChangeText={onChangeTitle}
+                    value={title}
+                />
+                <Text style={[styles.text, styles.date]}>{new Date(Number(noteId)).toString()}</Text>
+                <TextInput
+                    style={styles.text}
+                    onChangeText={onChangeText}
+                    value={text}
+                />
+            </ScrollView>
+            <Button
+                onPress={saveNote}
+                title="Save Note"
+                color="#841584"
+                accessibilityLabel="Save the current note."
             />
-            <Text style={[styles.text, styles.date]}>{new Date(Number(noteId)).toString()}</Text>
-            <TextInput
-                style={styles.text}
-                onChangeText={onChangeText}
-                value={text}
-            />
-        </ScrollView>
+        </View>
     )
 }
 

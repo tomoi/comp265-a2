@@ -79,7 +79,7 @@ export default function NotesScreen() {
                     {noteKeys.map((data) => {
                         return (
                             <View style={styles.individualNotes} key={data}>
-                                <Link href={`notes/note?id=${data}`} style={[styles.individualNotes, styles.text]}>{data}</Link>
+                                <Link href={`notes/note?noteId=${data}`} style={[styles.individualNotes, styles.text]}>{data}</Link>
                                 <Button
                                     onPress={() => { deleteNote(data) }}
                                     title="Delete Note"
