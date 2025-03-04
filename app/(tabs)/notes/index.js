@@ -1,36 +1,25 @@
 import { Text, View, StyleSheet, ScrollView, Button } from 'react-native';
-import { useLocalSearchParams, useGlobalSearchParams, Link, router } from 'expo-router';
+import { Link, router, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState, useEffect } from 'react';
-
-
-const noteObject = {
-    1234: { name: "Note 1", content: "This is my first note, and it might not work." },
-    14284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    14484: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1428464: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1424584: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1423284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1476284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1421284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    14285434: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1423284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    14345284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1454284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    14234284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    14463284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1434284: { name: "Note 981", content: "Will this one work?" },
-    14223484: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    1465284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    14243284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-    144643284: { name: "Note 2", content: "This is my second note, I dont know if it will work." },
-}
+import { useState, useEffect, useCallback } from 'react';
 
 export default function NotesScreen() {
     //used to refresh page when button is pressed.
     const [buttonPressed, ifButtonPressed] = useState(false);
-    //keys of all of the notes saved
-    const [noteKeys, refreshNoteKeys] = useState([]);
+
+    //keys and values of all notes
+    const [allNotes, updateAllNotes] = useState([])
+
+    //activates whenever the page is focused, so the notes will update when the user returns to the page
+    useFocusEffect(
+        useCallback(() => {
+            console.log("It's so over.")
+            ifButtonPressed(!buttonPressed);
+            return () => {
+                console.log("We are so back.");
+            };
+        }, [])
+    );
 
     //creates new note when the new note button is pressed.
     const createNewNote = async () => {
@@ -45,6 +34,7 @@ export default function NotesScreen() {
         }
     };
 
+    //deletes note that the button is attatched to
     async function deleteNote(noteId) {
         try {
             await AsyncStorage.removeItem(noteId);
@@ -52,21 +42,18 @@ export default function NotesScreen() {
         } catch (e) {
             // remove error
         }
-
-        console.log(noteId)
     }
 
+    //grabs all of the keys and note data when a button is pressed, so when a note is made or deleted
     useEffect(() => {
         async function getAllKeys() {
             let keys = []
             try {
                 keys = await AsyncStorage.getAllKeys()
-                refreshNoteKeys(keys);
+                updateAllNotes(await AsyncStorage.multiGet(keys));
             } catch (e) {
                 console.log(e)
             }
-            // example console.log result:
-            // ['@MyApp_user', '@MyApp_key']
         }
         getAllKeys();
     }, [buttonPressed]);
@@ -76,12 +63,12 @@ export default function NotesScreen() {
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.displayNotes}>
-                    {noteKeys.map((data) => {
+                    {allNotes.map((data) => {
                         return (
-                            <View style={styles.individualNotes} key={data}>
-                                <Link href={`notes/note?noteId=${data}`} style={[styles.individualNotes, styles.text]}>{data}</Link>
+                            <View style={styles.individualNotes} key={data[0]}>
+                                <Link href={`notes/note?noteId=${data[0]}`} style={[styles.individualNotes, styles.text]}>{JSON.parse(data[1]).name}</Link>
                                 <Button
-                                    onPress={() => { deleteNote(data) }}
+                                    onPress={() => { deleteNote(data[0]) }}
                                     title="Delete Note"
                                     color="#841584"
                                     accessibilityLabel="Make a new note."
