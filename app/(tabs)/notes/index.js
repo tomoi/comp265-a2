@@ -11,16 +11,13 @@ export default function NotesScreen() {
     const [allNotes, updateAllNotes] = useState([])
     const [pageFocused, isPageFocused] = useState(true)
 
-    console.log("Page refresh")
 
     //activates whenever the page is focused, so the notes will update when the user returns to the page
     useFocusEffect(
         useCallback(() => {
-            console.log("I am here.");
             isPageFocused(!pageFocused);
             getAllKeys();
             return () => {
-                console.log("I am leaving.");
             };
         }, [buttonPressed])
     );
