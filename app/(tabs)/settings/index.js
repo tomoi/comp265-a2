@@ -4,31 +4,46 @@ import { useLocalSearchParams } from "expo-router";
 
 export default function SettingsScreen() {
 
-    const { data } = useLocalSearchParams();
+return (
+    <View>
+        <Text style={styles.settings}>Language Settings</Text>
+        <Text style={styles.settings}>Font Size</Text>
+        <Text style={styles.settings}>Appearance</Text>
+        <Text style={styles.settings}>Narrator</Text>
+        <Text style={styles.settings}>Account Settings</Text>
+        <Text style={styles.settings}>About the App</Text>
+    </View>
+)
 
-    if (data === 'true') {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>These are the settings.</Text>
-            </View>
-        );
-    } else {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.text}>These are the other settings.{"\n"}Where I put all the super secret settings.</Text>
-            </View>
-        )
-    }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#25292e',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
     text: {
-        color: '#fff',
+        color: '#424940',
+    },
+    button: {
+        color: '#424940',
+        fontSize: 20,
+        textDecorationLine: 'underline',
+    },
+    settings: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        padding: 15,
+        fontSize: 18,
+        color: '#424940',
+        borderColor: '#42494080',
+    },
+
+    allNotes: {
+        display: 'flex',
+        flexDirection: 'column',
     },
 });
+

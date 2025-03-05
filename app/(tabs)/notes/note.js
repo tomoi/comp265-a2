@@ -57,7 +57,7 @@ export default function NotesScreen() {
             <Button
                 onPress={saveNote}
                 title="Save Note"
-                color="#841584"
+                color="#376a3e"
                 accessibilityLabel="Save the current note."
             />
         </View>
